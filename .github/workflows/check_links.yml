@@ -27,21 +27,16 @@ jobs:
         python -m pip install --upgrade pip
         pip install requests
 
-
     - name: Run Python script to check frined-links
       env:
         LIJIANGAPI_TOKEN: ${{ secrets.LIJIANGAPI_TOKEN }}
         PROXY_URL: ${{ secrets.PROXY_URL }}
       run: python test-friend.py
 
-    - name: Check if result.json exists
+    - name: Configure git
       run: |
-        if [ -f "./result.json" ]; then
-          echo "result.json exists."
-        else
-          echo "result.json does not exist. Please check test-friend.py script."
-          exit 1
-        fi
+        git config --global user.email "actions@github.com"
+        git config --global user.name "GitHub Actions"
 
     - name: Commit and push
       run: |
@@ -51,11 +46,7 @@ jobs:
         git add .
         git commit -m "⏱️GitHub Action每日定时更新"
         git push --force https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:page
-      env:
-        TZ: Asia/Shanghai
-        pythonLocation: /opt/hostedtoolcache/Python/3.13.2/x64
-        LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.13.2/x64/lib
-        
+    
     - name: Delete Workflow Runs
       uses: Mattraks/delete-workflow-runs@v2
       with:
